@@ -22,32 +22,31 @@ COMMANDS = {
     "scroll down": lambda: pyautogui.scroll(-300),
     "scroll up": lambda: pyautogui.scroll(300),
     "shutdown": lambda: os.system("shutdown /s /t 1"),
+    "restart": lambda: os.system("shutdown /r /t 1"),
+    "lock screen": lambda: pyautogui.hotkey('win', 'l'),
     "open notepad": lambda: subprocess.Popen("notepad"),
+    "open file explorer": lambda: pyautogui.hotkey('win', 'e'),
+    "open task manager": lambda: pyautogui.hotkey('ctrl', 'shift', 'esc'),
+    "switch window": lambda: pyautogui.hotkey('alt', 'tab'),
+    "minimize window": lambda: pyautogui.hotkey('win', 'down'),
+    "maximize window": lambda: pyautogui.hotkey('win', 'up'),
+    "take screenshot": lambda: pyautogui.hotkey('win', 'prtsc'),
     "volume up": lambda: [pyautogui.press('volumeup') for _ in range(5)],
     "volume down": lambda: [pyautogui.press('volumedown') for _ in range(5)],
     "mute": lambda: pyautogui.press('volumemute'),
+    "play/pause": lambda: pyautogui.press('playpause'),
+    "next track": lambda: pyautogui.press('nexttrack'),
+    "previous track": lambda: pyautogui.press('prevtrack'),
     "click": lambda: pyautogui.click(),
     "double click": lambda: pyautogui.doubleClick(),
-    "right click": lambda: pyautogui.rightClick()
+    "right click": lambda: pyautogui.rightClick(),
+    "open settings": lambda: pyautogui.hotkey('win', 'i'),
+    "open run": lambda: pyautogui.hotkey('win', 'r'),
+    "open calculator": lambda: subprocess.Popen("calc"),
+    "show desktop": lambda: pyautogui.hotkey('win', 'd'),
+    "search": lambda: pyautogui.hotkey('win', 's')
 }
 
-# Function to capture voice input
-# def listen_command():
-#     recognizer = sr.Recognizer()
-#     with sr.Microphone() as source:
-#         print("Listening...")
-#         recognizer.adjust_for_ambient_noise(source)
-#         audio = recognizer.listen(source)
-#     try:
-#         command = recognizer.recognize_google(audio).lower()
-#         print(f"You said: {command}")
-#         return command
-#     except sr.UnknownValueError:
-#         print("Sorry, I did not understand.")
-#         return None
-#     except sr.RequestError:
-#         print("Network error.")
-#         return None
 
 # Function to execute voice commands
 def execute_command(command):
