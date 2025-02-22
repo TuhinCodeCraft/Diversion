@@ -49,11 +49,6 @@ if st.button("Capture Image"):
             st.success("Text Extracted Successfully:")
             st.write(f"**Extracted Text:**\n{extracted_text}")
     
-            # Process extracted text with Gemini API (Replace with your function)
-            with st.spinner("Processing with Gemini..."):
-                ai_response = get_response_from_gemini(extracted_text)
-                st.success("Gemini Response:")
-                st.write(ai_response)
         else:
             st.error("No text found in the image. Please try again with a clearer image.")
 
