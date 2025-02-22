@@ -1,0 +1,1 @@
+# Functions to interact with Gemini API
