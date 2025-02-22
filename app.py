@@ -22,7 +22,7 @@ if st.button("🎤 Start Voice Input"):
             with st.spinner("Processing..."):
                 ai_response = get_response_from_gemini(voice_text)
                 st.success("Gemini Response:")
-                st.write(ai_response)
+                st.write(ai_response["candidates"][0]["content"]["parts"][0]["text"])
         else:
             st.error("Could not understand the voice input. Please try again.")
 
