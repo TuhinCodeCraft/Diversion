@@ -26,7 +26,6 @@ if st.button("🎤 Start Voice Input"):
         else:
             st.error("Could not understand the voice input. Please try again.")
 
-
 # Explicitly set the path to tesseract.exe
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -51,4 +50,3 @@ if st.button("Capture Image"):
     
         else:
             st.error("No text found in the image. Please try again with a clearer image.")
-
