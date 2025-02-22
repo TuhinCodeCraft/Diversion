@@ -9,7 +9,7 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 screenshot = pyautogui.screenshot()
 
 # Save the screenshot (optional)
-screenshot.save("screenshot.png")
+screenshot.save("public/screenshot.png")
 
 # Extract text from the screenshot
 extracted_text = pytesseract.image_to_string(screenshot)
