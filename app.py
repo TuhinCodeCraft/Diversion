@@ -11,10 +11,9 @@ import time
 import subprocess
 
 
-# App Configuration
+
 st.set_page_config(page_title="Voice-Powered AI Desktop Assistant", layout="centered")
 
-# UI Layout
 show_header()
 
 COMMANDS = {
