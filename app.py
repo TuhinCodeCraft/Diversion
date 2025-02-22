@@ -4,9 +4,10 @@ from src.api.gemini_api import get_response_from_gemini
 from src.components.ui_elements import show_header
 from PIL import Image
 import pytesseract
+import pyautogui
 
 # App Configuration
-st.set_page_config(page_title="Voice-Powered Gemini Assistant", layout="centered")
+st.set_page_config(page_title="Voice-Powered AI Desktop Assistant", layout="centered")
 
 # UI Layout
 show_header()
@@ -36,28 +37,23 @@ def extract_text_from_image(image):
 # Streamlit UI
 st.title("🖼️ Image to Text Extraction with AI Processing")
 
-# Image uploader
-uploaded_image = st.file_uploader("Upload an Image", type=["png", "jpg", "jpeg"])
-
-if uploaded_image:
+if st.button("Capture Image"):
     # Display uploaded image
-    image = Image.open(uploaded_image)
-    st.image(image, caption="Uploaded Image", use_column_width=True)
+    image = pyautogui.screenshot()
 
     # Button to start image text extraction
-    if st.button("📄 Extract Text from Image"):
-        with st.spinner("Extracting text..."):
-            extracted_text = extract_text_from_image(image)
-
-            if extracted_text.strip():
-                st.success("Text Extracted Successfully:")
-                st.write(f"**Extracted Text:**\n{extracted_text}")
-
-                # Process extracted text with Gemini API (Replace with your function)
-                with st.spinner("Processing with Gemini..."):
-                    ai_response = get_response_from_gemini(extracted_text)
-                    st.success("Gemini Response:")
-                    st.write(ai_response)
-            else:
-                st.error("No text found in the image. Please try again with a clearer image.")
+    # if st.button("📄 Extract Text from Image"):
+    with st.spinner("Extracting text..."):
+        extracted_text = extract_text_from_image(image)
+        if extracted_text.strip():
+            st.success("Text Extracted Successfully:")
+            st.write(f"**Extracted Text:**\n{extracted_text}")
+    
+            # Process extracted text with Gemini API (Replace with your function)
+            with st.spinner("Processing with Gemini..."):
+                ai_response = get_response_from_gemini(extracted_text)
+                st.success("Gemini Response:")
+                st.write(ai_response)
+        else:
+            st.error("No text found in the image. Please try again with a clearer image.")
 
