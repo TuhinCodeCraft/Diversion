@@ -6,10 +6,9 @@ from PIL import Image
 import pytesseract
 import pyautogui
 
-# App Configuration
+
 st.set_page_config(page_title="Voice-Powered AI Desktop Assistant", layout="centered")
 
-# UI Layout
 show_header()
 
 # Voice Input
