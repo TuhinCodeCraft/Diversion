@@ -10,6 +10,7 @@ import os
 import time
 import subprocess
 import difflib
+import pyttsx3
 
 st.set_page_config(page_title="Voice-Powered AI Desktop Assistant", layout="centered")
 
@@ -17,7 +18,7 @@ show_header()
 
 COMMANDS = {
     "open browser": lambda: subprocess.Popen("chrome"),
-    "close window": lambda: pyautogui.hotkey('alt', 'f4'),
+    "close window": lambda: close_application(),
     "scroll down": lambda: pyautogui.scroll(-300),
     "scroll up": lambda: pyautogui.scroll(300),
     "lock screen": lambda: pyautogui.hotkey('win', 'l'),
@@ -45,19 +46,20 @@ COMMANDS = {
     "show desktop": lambda: pyautogui.hotkey('win', 'd'),
     "search": lambda: pyautogui.hotkey('win', 's')
 }
+def close_application():
+    pyautogui.hotkey('alt', 'f4')
+    pyautogui.press('tab')
+    pyautogui.press('enter')
 
-# Function to execute voice commands
 def execute_command(command):
     if not command:
         return
 
-    # Check if command matches a pre-defined action
     for key in COMMANDS:
         if key in command:
             COMMANDS[key]()
             return
 
-    # Dynamic actions
     if "type" in command:
         text_to_type = command.replace("type", "").strip()
         pyautogui.write(text_to_type)
@@ -89,7 +91,6 @@ def find_best_match(voice_text, commands):
     best_match = difflib.get_close_matches(voice_text, commands, n=1, cutoff=0.5)
     return best_match[0] if best_match else None
 
-# Continuous Voice Input
 st.write("🎤 Voice Input is running continuously...")
 while True:
     voice_text = capture_voice_input()
@@ -121,12 +122,10 @@ while True:
         else:
             st.error("Command not recognized.")
 
-    time.sleep(1)  # Small delay to prevent overwhelming the microphone
+    time.sleep(1)
 
-# Explicitly set the path to tesseract.exe
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-# Function to extract text from image
 def extract_text_from_image(image):
     return pytesseract.image_to_string(image)
 
@@ -134,10 +133,9 @@ def extract_text_from_image(image):
 st.title("🖼️ Image to Text Extraction with AI Processing")
 
 if st.button("Capture Image"):
-    # Display uploaded image
+
     image = pyautogui.screenshot()
 
-    # Button to start image text extraction
     with st.spinner("Extracting text..."):
         extracted_text = extract_text_from_image(image)
         if extracted_text.strip():
@@ -146,3 +144,27 @@ if st.button("Capture Image"):
 
         else:
             st.error("No text found in the image. Please try again with a clearer image.")
+
+
+# Function to initialize and play text-to-speech
+def text_to_speech(text):
+    engine = pyttsx3.init()
+    engine.setProperty('rate', 200)  # Speed of speech
+    engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
+    engine.say(text)
+    engine.runAndWait()
+
+# Streamlit App Interface
+st.title("Desktop Assistant")
+st.subheader("Text-to-Speech")
+
+# Input text area
+input_text = st.text_area("Enter text to convert to speech:", "")
+
+# Trigger the TTS function when the button is clicked
+if st.button("Speak"):
+    if input_text:
+        text_to_speech(input_text)
+    else:
+        st.warning("Please enter some text.")
+
