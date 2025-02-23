@@ -9,8 +9,7 @@ import speech_recognition as sr
 import os
 import time
 import subprocess
-
-
+import difflib
 
 st.set_page_config(page_title="Voice-Powered AI Desktop Assistant", layout="centered")
 
@@ -21,8 +20,6 @@ COMMANDS = {
     "close window": lambda: pyautogui.hotkey('alt', 'f4'),
     "scroll down": lambda: pyautogui.scroll(-300),
     "scroll up": lambda: pyautogui.scroll(300),
-    "shutdown": lambda: os.system("shutdown /s /t 1"),
-    "restart": lambda: os.system("shutdown /r /t 1"),
     "lock screen": lambda: pyautogui.hotkey('win', 'l'),
     "open notepad": lambda: subprocess.Popen("notepad"),
     "open file explorer": lambda: pyautogui.hotkey('win', 'e'),
@@ -34,9 +31,11 @@ COMMANDS = {
     "volume up": lambda: [pyautogui.press('volumeup') for _ in range(5)],
     "volume down": lambda: [pyautogui.press('volumedown') for _ in range(5)],
     "mute": lambda: pyautogui.press('volumemute'),
-    "play/pause": lambda: pyautogui.press('playpause'),
+    "play pause": lambda: pyautogui.press('playpause'),
     "next track": lambda: pyautogui.press('nexttrack'),
     "previous track": lambda: pyautogui.press('prevtrack'),
+    "press enter": lambda: pyautogui.press('enter'),
+    "press tab": lambda: pyautogui.press('tab'),
     "click": lambda: pyautogui.click(),
     "double click": lambda: pyautogui.doubleClick(),
     "right click": lambda: pyautogui.rightClick(),
@@ -46,7 +45,6 @@ COMMANDS = {
     "show desktop": lambda: pyautogui.hotkey('win', 'd'),
     "search": lambda: pyautogui.hotkey('win', 's')
 }
-
 
 # Function to execute voice commands
 def execute_command(command):
@@ -86,26 +84,45 @@ def execute_command(command):
     else:
         print("Command not recognized.")
 
-# Infinite loop to keep listening
-# while True:
-#     command = listen_command()
-#     execute_command(command)
-#     time.sleep(1)  # Optional delay to avoid overwhelming the microphone
 
-# Voice Input
-if st.button("🎤 Start Voice Input"):
-    with st.spinner("Listening..."):
-        voice_text = capture_voice_input().lower()
-        if voice_text not in COMMANDS:
-            st.write(f"**You said:** {voice_text}")
-            # Processing using Gemini API
-            with st.spinner("Processing..."):
-                ai_response = get_response_from_gemini(voice_text)
+def find_best_match(voice_text, commands):
+    best_match = difflib.get_close_matches(voice_text, commands, n=1, cutoff=0.5)
+    return best_match[0] if best_match else None
+
+# Continuous Voice Input
+st.write("🎤 Voice Input is running continuously...")
+while True:
+    voice_text = capture_voice_input()
+    if voice_text:
+        voice_text = voice_text.lower()
+        st.write(f"**You said:** {voice_text}")
+
+        if voice_text.startswith("nova"):
+            prompt = voice_text.replace("nova", "").strip()
+            with st.spinner("Processing with Gemini..."):
+                ai_response = get_response_from_gemini(prompt)
+                gemini_res = ai_response["candidates"][0]["content"]["parts"][0]["text"]
                 st.success("Gemini Response:")
-                st.write(ai_response["candidates"][0]["content"]["parts"][0]["text"])
+                st.write(gemini_res)
+                pyautogui.write(gemini_res)
+            continue
+
+        if "write" in voice_text:
+            text_to_write = voice_text.replace("write", "").strip()
+            pyautogui.write(text_to_write)
+            continue
+
+        # Find the closest matching command
+        best_match = find_best_match(voice_text, COMMANDS.keys())
+
+        if best_match:
+            st.success(f"Executing command: {best_match}")
+            execute_command(best_match)
         else:
-            execute_command(voice_text)
-            
+            st.error("Command not recognized.")
+
+    time.sleep(1)  # Small delay to prevent overwhelming the microphone
+
 # Explicitly set the path to tesseract.exe
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -121,12 +138,11 @@ if st.button("Capture Image"):
     image = pyautogui.screenshot()
 
     # Button to start image text extraction
-    # if st.button("📄 Extract Text from Image"):
     with st.spinner("Extracting text..."):
         extracted_text = extract_text_from_image(image)
         if extracted_text.strip():
             st.success("Text Extracted Successfully:")
             st.write(f"**Extracted Text:**\n{extracted_text}")
-    
+
         else:
             st.error("No text found in the image. Please try again with a clearer image.")
