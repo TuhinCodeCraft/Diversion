@@ -112,9 +112,9 @@ while True:
                 ai_response = get_response_from_gemini(prompt)
                 gemini_res = ai_response["candidates"][0]["content"]["parts"][0]["text"]
                 st.success("Gemini Response:")
-                text_to_speech(gemini_res)
                 st.write(gemini_res)
                 pyautogui.write(gemini_res)
+                text_to_speech(gemini_res)
             continue
 
         if "write" in voice_text:
