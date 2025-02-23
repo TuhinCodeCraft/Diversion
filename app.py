@@ -46,11 +46,11 @@ COMMANDS = {
     "show desktop": lambda: pyautogui.hotkey('win', 'd'),
     "search": lambda: pyautogui.hotkey('win', 's')
 }
-# Function to initialize and play text-to-speech
+
 def text_to_speech(text):
     engine = pyttsx3.init()
-    engine.setProperty('rate', 200)  # Speed of speech
-    engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
+    engine.setProperty('rate', 200)
+    engine.setProperty('volume', 1)
     engine.say(text)
     engine.runAndWait()
     
@@ -128,7 +128,7 @@ while True:
                 pyautogui.write(gemini_res)
                 continue
 
-        # Find the closest matching command
+
         best_match = find_best_match(voice_text, COMMANDS.keys())
 
         if best_match:
@@ -144,7 +144,7 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 def extract_text_from_image(image):
     return pytesseract.image_to_string(image)
 
-# Streamlit UI
+
 st.title("🖼️ Image to Text Extraction with AI Processing")
 
 if st.button("Capture Image"):

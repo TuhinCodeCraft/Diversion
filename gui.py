@@ -72,7 +72,7 @@ class VoiceAssistantGUI(QWidget):
             "open calculator": lambda: subprocess.Popen("calc"), 
         }
 
-        # Continuous voice capture
+
         self.voice_thread = VoiceCaptureThread()
         self.voice_thread.voice_captured.connect(self.process_voice_input)
         self.voice_thread.start()
