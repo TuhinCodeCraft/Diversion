@@ -46,6 +46,14 @@ COMMANDS = {
     "show desktop": lambda: pyautogui.hotkey('win', 'd'),
     "search": lambda: pyautogui.hotkey('win', 's')
 }
+# Function to initialize and play text-to-speech
+def text_to_speech(text):
+    engine = pyttsx3.init()
+    engine.setProperty('rate', 200)  # Speed of speech
+    engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
+    engine.say(text)
+    engine.runAndWait()
+    
 def close_application():
     pyautogui.hotkey('alt', 'f4')
     pyautogui.press('tab')
@@ -147,10 +155,4 @@ if st.button("Capture Image"):
             st.error("No text found in the image. Please try again with a clearer image.")
 
 
-# Function to initialize and play text-to-speech
-def text_to_speech(text):
-    engine = pyttsx3.init()
-    engine.setProperty('rate', 200)  # Speed of speech
-    engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
-    engine.say(text)
-    engine.runAndWait()
+
