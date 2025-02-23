@@ -104,6 +104,7 @@ while True:
                 ai_response = get_response_from_gemini(prompt)
                 gemini_res = ai_response["candidates"][0]["content"]["parts"][0]["text"]
                 st.success("Gemini Response:")
+                text_to_speech(gemini_res)
                 st.write(gemini_res)
                 pyautogui.write(gemini_res)
             continue
@@ -153,18 +154,3 @@ def text_to_speech(text):
     engine.setProperty('volume', 1)  # Volume level (0.0 to 1.0)
     engine.say(text)
     engine.runAndWait()
-
-# Streamlit App Interface
-st.title("Desktop Assistant")
-st.subheader("Text-to-Speech")
-
-# Input text area
-input_text = st.text_area("Enter text to convert to speech:", "")
-
-# Trigger the TTS function when the button is clicked
-if st.button("Speak"):
-    if input_text:
-        text_to_speech(input_text)
-    else:
-        st.warning("Please enter some text.")
-
